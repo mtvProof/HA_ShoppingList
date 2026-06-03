@@ -14,7 +14,7 @@ class ShoppingListPanelView(HomeAssistantView):
 
     url = f"/api/{DOMAIN}/panel"
     name = f"api:{DOMAIN}:panel"
-    requires_auth = False
+    requires_auth = True
 
     async def get(self, request):
         """Serve the panel HTML."""
@@ -639,7 +639,17 @@ class ShoppingListPanelView(HomeAssistantView):
         }
 
         // Initialize on load
+        console.log('Shopping list app initializing...');
         connectToHass();
+        
+        // Fallback if parent connection doesn't work - load directly
+        setTimeout(() => {
+            if (!items || Object.keys(items).length === 0) {
+                console.log('Loading items directly...');
+                loadItems();
+                loadRecipes();
+            }
+        }, 1000);
     </script>
 </body>
 </html>
