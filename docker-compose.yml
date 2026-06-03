@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  shopping-list:
+    build: .
+    container_name: ha-shopping-list
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+    environment:
+      - TZ=America/New_York

@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f9f9f9;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #2196F3;
+            border-bottom: 2px solid #2196F3;
+        }
+
+        .tab:hover {
+            background: #f0f0f0;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .add-form {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1976D2;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
+        .category-section {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            padding: 10px 0;
+            border-bottom: 2px solid #2196F3;
+            margin-bottom: 10px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+        }
+
+        .item:hover {
+            background: #f0f0f0;
+        }
+
+        .item.in-cart {
+            opacity: 0.6;
+            background: #e8f5e9;
+        }
+
+        .item.in-cart .item-name {
+            text-decoration: line-through;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .item-quantity {
+            font-size: 14px;
+            color: #666;
+            margin-left: 8px;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .delete-btn:hover {
+            background: #da190b;
+        }
+
+        .cart-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .recipe-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .recipe-card {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .recipe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .recipe-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .recipe-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .recipe-ingredients {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ingredient-item input {
+            flex: 1;
+        }
+
+        .remove-ingredient {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .add-ingredient {
+            margin-top: 10px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('shopping')">Shopping List</button>
+            <button class="tab" onclick="switchTab('recipes')">Recipes</button>
+        </div>
+
+        <div class="content">
+            <!-- Shopping List Tab -->
+            <div id="shopping-tab" class="tab-content active">
+                <div class="add-form">
+                    <h3 style="margin-bottom: 15px;">Add Item</h3>
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" id="item-name" placeholder="e.g., Milk">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" id="item-category" placeholder="e.g., Dairy" value="Uncategorized">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="text" id="item-quantity" placeholder="e.g., 2" value="1">
+                    </div>
+                    <button class="btn" onclick="addItem()">Add Item</button>
+                </div>
+
+                <div id="items-container"></div>
+
+                <div class="cart-section">
+                    <div class="category-title">In Cart</div>
+                    <div id="cart-container"></div>
+                    <button class="btn btn-danger checkout-btn" onclick="checkout()">Checkout</button>
+                </div>
+            </div>
+
+            <!-- Recipes Tab -->
+            <div id="recipes-tab" class="tab-content">
+                <button class="btn btn-success" onclick="openRecipeModal()" style="margin-bottom: 20px;">Create Recipe</button>
+                <div id="recipes-container" class="recipe-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modal -->
+    <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Create Recipe</div>
+            <div class="form-group">
+                <label>Recipe Name</label>
+                <input type="text" id="recipe-name" placeholder="e.g., Pasta Carbonara">
+            </div>
+            <div class="form-group">
+                <label>Ingredients</label>
+                <div id="ingredients-list"></div>
+                <button class="btn add-ingredient" onclick="addIngredientField()">Add Ingredient</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeRecipeModal()">Cancel</button>
+                <button class="btn btn-success" onclick="saveRecipe()">Save Recipe</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ingredientCount = 0;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'shopping') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('shopping-tab').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('recipes-tab').classList.add('active');
+                loadRecipes();
+            }
+        }
+
+        async function loadItems() {
+            const response = await fetch('/api/items');
+            const data = await response.json();
+            
+            const itemsContainer = document.getElementById('items-container');
+            const cartContainer = document.getElementById('cart-container');
+            
+            itemsContainer.innerHTML = '';
+            cartContainer.innerHTML = '';
+            
+            // Render active items by category
+            if (Object.keys(data.active).length === 0) {
+                itemsContainer.innerHTML = '<div class="empty-state">No items yet. Add your first item!</div>';
+            } else {
+                for (const [category, items] of Object.entries(data.active)) {
+                    const section = document.createElement('div');
+                    section.className = 'category-section';
+                    section.innerHTML = `<div class="category-title">${category}</div>`;
+                    
+                    items.forEach(item => {
+                        section.innerHTML += renderItem(item);
+                    });
+                    
+                    itemsContainer.appendChild(section);
+                }
+            }
+            
+            // Render cart items
+            if (data.cart.length === 0) {
+                cartContainer.innerHTML = '<div class="empty-state">Cart is empty</div>';
+            } else {
+                data.cart.forEach(item => {
+                    cartContainer.innerHTML += renderItem(item);
+                });
+            }
+        }
+
+        function renderItem(item) {
+            return `
+                <div class="item ${item.in_cart ? 'in-cart' : ''}">
+                    <input type="checkbox" class="checkbox" ${item.in_cart ? 'checked' : ''} 
+                           onchange="toggleItem('${item.id}')">
+                    <div class="item-details">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-quantity">(${item.quantity})</span>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem('${item.id}')">Delete</button>
+                </div>
+            `;
+        }
+
+        async function addItem() {
+            const name = document.getElementById('item-name').value;
+            const category = document.getElementById('item-category').value;
+            const quantity = document.getElementById('item-quantity').value;
+            
+            if (!name) {
+                alert('Please enter an item name');
+                return;
+            }
+            
+            await fetch('/api/items', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, category, quantity})
+            });
+            
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-category').value = 'Uncategorized';
+            document.getElementById('item-quantity').value = '1';
+            
+            loadItems();
+        }
+
+        async function toggleItem(id) {
+            await fetch(`/api/items/${id}/toggle`, {method: 'POST'});
+            loadItems();
+        }
+
+        async function deleteItem(id) {
+            await fetch(`/api/items/${id}`, {method: 'DELETE'});
+            loadItems();
+        }
+
+        async function checkout() {
+            if (!confirm('Remove all items from cart?')) return;
+            await fetch('/api/checkout', {method: 'POST'});
+            loadItems();
+        }
+
+        async function loadRecipes() {
+            const response = await fetch('/api/recipes');
+            const recipes = await response.json();
+            
+            const container = document.getElementById('recipes-container');
+            
+            if (recipes.length === 0) {
+                container.innerHTML = '<div class="empty-state">No recipes yet. Create your first recipe!</div>';
+                return;
+            }
+            
+            container.innerHTML = recipes.map(recipe => `
+                <div class="recipe-card">
+                    <div class="recipe-header">
+                        <div class="recipe-name">${recipe.name}</div>
+                        <div class="recipe-actions">
+                            <button class="btn btn-success" onclick="addRecipeToList('${recipe.id}')">Add to List</button>
+                            <button class="delete-btn" onclick="deleteRecipe('${recipe.id}')">Delete</button>
+                        </div>
+                    </div>
+                    <div class="recipe-ingredients">
+                        ${recipe.ingredients.map(i => `• ${i.name} (${i.quantity}) - ${i.category}`).join('<br>')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openRecipeModal() {
+            document.getElementById('recipe-modal').classList.add('active');
+            document.getElementById('recipe-name').value = '';
+            document.getElementById('ingredients-list').innerHTML = '';
+            ingredientCount = 0;
+            addIngredientField();
+        }
+
+        function closeRecipeModal() {
+            document.getElementById('recipe-modal').classList.remove('active');
+        }
+
+        function addIngredientField() {
+            const id = ingredientCount++;
+            const html = `
+                <div class="ingredient-item" id="ingredient-${id}">
+                    <input type="text" placeholder="Name" class="ing-name">
+                    <input type="text" placeholder="Qty" class="ing-qty" value="1" style="max-width: 80px;">
+                    <input type="text" placeholder="Category" class="ing-cat" value="Uncategorized">
+                    <button class="remove-ingredient" onclick="removeIngredient(${id})">×</button>
+                </div>
+            `;
+            document.getElementById('ingredients-list').insertAdjacentHTML('beforeend', html);
+        }
+
+        function removeIngredient(id) {
+            document.getElementById(`ingredient-${id}`).remove();
+        }
+
+        async function saveRecipe() {
+            const name = document.getElementById('recipe-name').value;
+            if (!name) {
+                alert('Please enter a recipe name');
+                return;
+            }
+            
+            const ingredients = [];
+            document.querySelectorAll('.ingredient-item').forEach(item => {
+                const ingName = item.querySelector('.ing-name').value;
+                const ingQty = item.querySelector('.ing-qty').value;
+                const ingCat = item.querySelector('.ing-cat').value;
+                
+                if (ingName) {
+                    ingredients.push({
+                        name: ingName,
+                        quantity: ingQty,
+                        category: ingCat
+                    });
+                }
+            });
+            
+            if (ingredients.length === 0) {
+                alert('Please add at least one ingredient');
+                return;
+            }
+            
+            await fetch('/api/recipes', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({name, ingredients})
+            });
+            
+            closeRecipeModal();
+            loadRecipes();
+        }
+
+        async function addRecipeToList(id) {
+            await fetch(`/api/recipes/${id}/add`, {method: 'POST'});
+            alert('Recipe ingredients added to shopping list!');
+            switchTab('shopping');
+            loadItems();
+        }
+
+        async function deleteRecipe(id) {
+            if (!confirm('Delete this recipe?')) return;
+            await fetch(`/api/recipes/${id}`, {method: 'DELETE'});
+            loadRecipes();
+        }
+
+        // Load items on page load
+        loadItems();
+    </script>
+</body>
+</html>
