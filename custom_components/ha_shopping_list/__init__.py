@@ -70,19 +70,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register API views
     await async_setup_views(hass)
     
-    # Register the panel
-    async def register_panel(_):
-        """Register the panel when frontend is ready."""
-        await hass.components.panel_custom.async_register_panel(
-            frontend_url_path=DOMAIN,
-            webcomponent_name="ha-panel-iframe",
-            sidebar_title="HA Shopping List",
-            sidebar_icon="mdi:cart",
-            config={"url": f"/api/{DOMAIN}/panel"},
-            require_admin=False,
-        )
-    
-    hass.bus.async_listen_once("homeassistant_started", register_panel)
+    # Register the panel using panel_iframe
+    await hass.services.async_call(
+        "panel_iframe",
+        "create",
+        {
+            "url": f"/api/{DOMAIN}/panel",
+            "title": "HA Shopping List",
+            "icon": "mdi:cart",
+            "require_admin": False,
+        },
+        blocking=True,
+    )
     
     _LOGGER.info("HA Shopping List integration loaded successfully")
     
