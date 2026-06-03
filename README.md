@@ -42,16 +42,22 @@ A comprehensive shopping list app for Home Assistant with recipe management and 
 4. Click to add the integration
 5. Restart Home Assistant
 
-## Adding to Dashboard
+## Access Your Shopping List
 
-1. Go to any dashboard
-2. Click **Edit Dashboard**
-3. Click **+ Add Card**
-4. Click **Custom** at the bottom
-5. Enter: `custom:ha-shopping-list-card`
-6. Click **Save**
+After installing, access your shopping list at:
+`http://YOUR_HA_IP:8123/api/ha_shopping_list/panel`
 
-The shopping list will now appear as a card on your dashboard!
+### Add to Sidebar (Optional)
+
+Add this to your `configuration.yaml`:
+```yaml
+panel_iframe:
+  shopping_list:
+    title: Shopping List
+    icon: mdi:cart
+    url: /api/ha_shopping_list/panel
+```
+Then restart Home Assistant.
 
 ## Usage
 
