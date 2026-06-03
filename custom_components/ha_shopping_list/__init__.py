@@ -70,21 +70,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register API views
     await async_setup_views(hass)
     
-    # Register panel in sidebar
-    try:
-        await hass.components.frontend.async_register_built_in_panel(
-            component_name="iframe",
-            sidebar_title="Shopping List",
-            sidebar_icon="mdi:cart",
-            frontend_url_path=DOMAIN,
-            config={"url": f"/api/{DOMAIN}/panel"},
-            require_admin=False,
-        )
-        _LOGGER.info("HA Shopping List panel registered in sidebar")
-    except Exception as e:
-        _LOGGER.error(f"Failed to register panel: {e}")
-    
     _LOGGER.info("HA Shopping List integration loaded successfully")
+    _LOGGER.info(f"Access your shopping list at: http://YOUR_HA_IP:8123/api/{DOMAIN}/panel")
     
     return True
 
