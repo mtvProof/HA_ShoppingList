@@ -16,12 +16,37 @@ def add_header(response):
 
 DATA_FILE = '/data/shopping_list.json'
 
+DEFAULT_CATEGORIES = [
+    {'name': 'Produce', 'emoji': '🥬'},
+    {'name': 'Dairy', 'emoji': '🥛'},
+    {'name': 'Meat', 'emoji': '🥩'},
+    {'name': 'Bakery', 'emoji': '🍞'},
+    {'name': 'Frozen', 'emoji': '🧊'},
+    {'name': 'Pantry', 'emoji': '🥫'},
+    {'name': 'Snacks', 'emoji': '🍿'},
+    {'name': 'Beverages', 'emoji': '🥤'},
+    {'name': 'Household', 'emoji': '🧹'},
+    {'name': 'Personal Care', 'emoji': '🧴'},
+    {'name': 'Other', 'emoji': '📦'}
+]
+
 def load_data():
     """Load data from JSON file."""
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, 'r') as f:
-            return json.load(f)
-    return {'items': [], 'recipes': []}
+            data = json.load(f)
+            # Ensure categories and theme exist
+            if 'categories' not in data:
+                data['categories'] = DEFAULT_CATEGORIES
+            if 'theme' not in data:
+                data['theme'] = {'mode': 'dark', 'primary': '#2196F3', 'background': '#1e1e1e', 'surface': '#2d2d2d'}
+            return data
+    return {
+        'items': [], 
+        'recipes': [], 
+        'categories': DEFAULT_CATEGORIES,
+        'theme': {'mode': 'dark', 'primary': '#2196F3', 'background': '#1e1e1e', 'surface': '#2d2d2d'}
+    }
 
 def save_data(data):
     """Save data to JSON file."""
@@ -170,7 +195,7 @@ def add_recipe_to_list(recipe_id):
         item = {
             'id': str(uuid.uuid4()),
             'name': ingredient['name'],
-            'category': ingredient.get('category', 'Uncategorized'),
+            'category': ingredient.get('category', 'Other'),
             'quantity': ingredient.get('quantity', '1'),
             'in_cart': False,
             'created_at': datetime.now().isoformat()
@@ -179,6 +204,34 @@ def add_recipe_to_list(recipe_id):
     
     save_data(data)
     return jsonify({'success': True, 'added': len(recipe['ingredients'])})
+
+@app.route('/api/categories', methods=['GET'])
+def get_categories():
+    """Get all categories."""
+    data = load_data()
+    return jsonify(data.get('categories', DEFAULT_CATEGORIES))
+
+@app.route('/api/categories', methods=['POST'])
+def save_categories():
+    """Save categories."""
+    data = load_data()
+    data['categories'] = request.json['categories']
+    save_data(data)
+    return jsonify({'success': True})
+
+@app.route('/api/theme', methods=['GET'])
+def get_theme():
+    """Get current theme."""
+    data = load_data()
+    return jsonify(data.get('theme', {'mode': 'dark', 'primary': '#2196F3', 'background': '#1e1e1e', 'surface': '#2d2d2d'}))
+
+@app.route('/api/theme', methods=['POST'])
+def save_theme():
+    """Save theme settings."""
+    data = load_data()
+    data['theme'] = request.json
+    save_data(data)
+    return jsonify({'success': True})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=False)
