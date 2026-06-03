@@ -91,19 +91,48 @@ def add_item():
     """Add a new item to the shopping list."""
     data = load_data()
     
-    item = {
-        'id': str(uuid.uuid4()),
-        'name': request.json['name'],
-        'category': request.json.get('category', 'Uncategorized'),
-        'quantity': request.json.get('quantity', '1'),
-        'in_cart': False,
-        'created_at': datetime.now().isoformat()
-    }
+    name = request.json['name']
+    category = request.json.get('category', 'Uncategorized')
+    quantity_str = request.json.get('quantity', '1')
     
-    data['items'].append(item)
-    save_data(data)
+    # Try to parse quantity as integer, default to 1 if it fails
+    try:
+        new_quantity = int(quantity_str) if quantity_str else 1
+    except (ValueError, TypeError):
+        new_quantity = 1
     
-    return jsonify(item), 201
+    # Check if item already exists (same name and category, not in cart)
+    existing_item = None
+    for item in data['items']:
+        if item['name'].lower() == name.lower() and item['category'] == category and not item['in_cart']:
+            existing_item = item
+            break
+    
+    if existing_item:
+        # Item exists, add to quantity
+        try:
+            existing_qty = int(existing_item['quantity']) if existing_item['quantity'] else 1
+        except (ValueError, TypeError):
+            existing_qty = 1
+        
+        existing_item['quantity'] = str(existing_qty + new_quantity)
+        save_data(data)
+        return jsonify(existing_item), 200
+    else:
+        # Create new item
+        item = {
+            'id': str(uuid.uuid4()),
+            'name': name,
+            'category': category,
+            'quantity': str(new_quantity),
+            'in_cart': False,
+            'created_at': datetime.now().isoformat()
+        }
+        
+        data['items'].append(item)
+        save_data(data)
+        
+        return jsonify(item), 201
 
 @app.route('/api/items/<item_id>/toggle', methods=['POST'])
 def toggle_item(item_id):
@@ -192,15 +221,42 @@ def add_recipe_to_list(recipe_id):
     
     # Add each ingredient to the shopping list
     for ingredient in recipe['ingredients']:
-        item = {
-            'id': str(uuid.uuid4()),
-            'name': ingredient['name'],
-            'category': ingredient.get('category', 'Other'),
-            'quantity': ingredient.get('quantity', '1'),
-            'in_cart': False,
-            'created_at': datetime.now().isoformat()
-        }
-        data['items'].append(item)
+        name = ingredient['name']
+        category = ingredient.get('category', 'Other')
+        quantity_str = ingredient.get('quantity', '1')
+        
+        # Try to parse quantity as integer
+        try:
+            new_quantity = int(quantity_str) if quantity_str else 1
+        except (ValueError, TypeError):
+            new_quantity = 1
+        
+        # Check if item already exists (same name and category, not in cart)
+        existing_item = None
+        for item in data['items']:
+            if item['name'].lower() == name.lower() and item['category'] == category and not item['in_cart']:
+                existing_item = item
+                break
+        
+        if existing_item:
+            # Item exists, add to quantity
+            try:
+                existing_qty = int(existing_item['quantity']) if existing_item['quantity'] else 1
+            except (ValueError, TypeError):
+                existing_qty = 1
+            
+            existing_item['quantity'] = str(existing_qty + new_quantity)
+        else:
+            # Create new item
+            item = {
+                'id': str(uuid.uuid4()),
+                'name': name,
+                'category': category,
+                'quantity': str(new_quantity),
+                'in_cart': False,
+                'created_at': datetime.now().isoformat()
+            }
+            data['items'].append(item)
     
     save_data(data)
     return jsonify({'success': True, 'added': len(recipe['ingredients'])})
