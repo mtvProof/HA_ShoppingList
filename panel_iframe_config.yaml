@@ -1,5 +1,0 @@
-ha_shopping_list:
-  url: /api/ha_shopping_list/panel
-  title: HA Shopping List
-  icon: mdi:cart
-  require_admin: false

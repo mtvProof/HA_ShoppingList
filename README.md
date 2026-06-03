@@ -40,21 +40,8 @@ A comprehensive shopping list app for Home Assistant with recipe management and 
 2. Click **+ Add Integration**
 3. Search for "HA Shopping List"
 4. Click to add the integration
-
-### Adding the Sidebar Panel
-
-After installation, add the panel to your sidebar by adding this to your `configuration.yaml`:
-
-```yaml
-panel_iframe:
-  ha_shopping_list:
-    title: HA Shopping List
-    icon: mdi:cart
-    url: /api/ha_shopping_list/panel
-    require_admin: false
-```
-
-Then restart Home Assistant. The shopping list panel will appear in your sidebar.
+5. Restart Home Assistant
+6. The shopping list panel will automatically appear in your sidebar with a cart icon
 
 ## Usage
 
