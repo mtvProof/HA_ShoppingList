@@ -3,7 +3,6 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.components import panel_custom
 
 from .const import DOMAIN
 from .shopping_list import ShoppingListManager
@@ -71,23 +70,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register API views
     await async_setup_views(hass)
     
-    # Register panel as iframe
-    async def _register_panel():
-        try:
-            await panel_custom.async_register_panel(
-                hass=hass,
-                frontend_url_path=DOMAIN,
-                webcomponent_name="iframe",
-                sidebar_title="HA Shopping List",
-                sidebar_icon="mdi:cart",
-                config={"url": f"/api/{DOMAIN}/panel"},
-                require_admin=False,
-            )
-            _LOGGER.info("HA Shopping List panel registered successfully")
-        except Exception as e:
-            _LOGGER.error(f"Failed to register panel: {e}")
-    
-    hass.async_create_task(_register_panel())
+    # Register panel in sidebar
+    try:
+        await hass.components.frontend.async_register_built_in_panel(
+            component_name="iframe",
+            sidebar_title="Shopping List",
+            sidebar_icon="mdi:cart",
+            frontend_url_path=DOMAIN,
+            config={"url": f"/api/{DOMAIN}/panel"},
+            require_admin=False,
+        )
+        _LOGGER.info("HA Shopping List panel registered in sidebar")
+    except Exception as e:
+        _LOGGER.error(f"Failed to register panel: {e}")
     
     _LOGGER.info("HA Shopping List integration loaded successfully")
     
