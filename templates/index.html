@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping List</title>
     <style>
+        :root {
+            --primary-color: #2196F3;
+            --bg-color: #1e1e1e;
+            --surface-color: #2d2d2d;
+            --text-color: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --hover-color: #383838;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,23 +23,26 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f5f5;
-            padding: 20px;
+            background: var(--bg-color);
+            padding: 0;
+            margin: 0;
+            color: var(--text-color);
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
+            max-width: 100%;
+            margin: 0;
+            background: var(--bg-color);
+            min-height: 100vh;
         }
 
         .tabs {
             display: flex;
-            background: #f9f9f9;
-            border-bottom: 1px solid #ddd;
+            background: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .tab {
@@ -41,22 +54,24 @@
             background: none;
             font-size: 16px;
             font-weight: 500;
-            color: #666;
+            color: var(--text-secondary);
             transition: all 0.3s;
         }
 
         .tab.active {
-            background: white;
-            color: #2196F3;
-            border-bottom: 2px solid #2196F3;
+            background: var(--bg-color);
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
         }
 
         .tab:hover {
-            background: #f0f0f0;
+            background: var(--hover-color);
         }
 
         .content {
             padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .tab-content {
@@ -68,93 +83,103 @@
         }
 
         .add-form {
-            background: #f9f9f9;
-            padding: 15px;
+            background: var(--surface-color);
+            padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
-            color: #333;
+            color: var(--text-color);
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
             font-size: 14px;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         .btn {
-            background: #2196F3;
+            background: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 24px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
         .btn:hover {
-            background: #1976D2;
+            opacity: 0.9;
+            transform: translateY(-1px);
         }
 
         .btn-success {
             background: #4CAF50;
         }
 
-        .btn-success:hover {
-            background: #45a049;
-        }
-
         .btn-danger {
             background: #f44336;
         }
 
-        .btn-danger:hover {
-            background: #da190b;
+        .btn-secondary {
+            background: #666;
         }
 
         .category-section {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .category-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
-            color: #333;
-            padding: 10px 0;
-            border-bottom: 2px solid #2196F3;
-            margin-bottom: 10px;
+            color: var(--text-color);
+            padding: 12px 0;
+            border-bottom: 2px solid var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-emoji {
+            font-size: 24px;
         }
 
         .item {
             display: flex;
             align-items: center;
-            padding: 12px;
-            background: #f9f9f9;
-            border-radius: 4px;
-            margin-bottom: 8px;
+            padding: 14px;
+            background: var(--surface-color);
+            border-radius: 6px;
+            margin-bottom: 10px;
             transition: all 0.3s;
         }
 
         .item:hover {
-            background: #f0f0f0;
+            background: var(--hover-color);
         }
 
         .item.in-cart {
             opacity: 0.6;
-            background: #e8f5e9;
         }
 
         .item.in-cart .item-name {
@@ -162,10 +187,11 @@
         }
 
         .checkbox {
-            width: 20px;
-            height: 20px;
-            margin-right: 12px;
+            width: 22px;
+            height: 22px;
+            margin-right: 14px;
             cursor: pointer;
+            accent-color: var(--primary-color);
         }
 
         .item-details {
@@ -175,12 +201,12 @@
         .item-name {
             font-size: 16px;
             font-weight: 500;
-            color: #333;
+            color: var(--text-color);
         }
 
         .item-quantity {
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
             margin-left: 8px;
         }
 
@@ -188,25 +214,21 @@
             background: #f44336;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
         }
 
-        .delete-btn:hover {
-            background: #da190b;
-        }
-
         .cart-section {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid #ddd;
+            border-top: 2px solid var(--border-color);
         }
 
         .checkout-btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             font-size: 16px;
             margin-top: 15px;
         }
@@ -217,23 +239,23 @@
         }
 
         .recipe-card {
-            background: #f9f9f9;
-            padding: 15px;
+            background: var(--surface-color);
+            padding: 18px;
             border-radius: 8px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
         }
 
         .recipe-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .recipe-name {
             font-size: 18px;
             font-weight: 600;
-            color: #333;
+            color: var(--text-color);
         }
 
         .recipe-actions {
@@ -243,8 +265,8 @@
 
         .recipe-ingredients {
             font-size: 14px;
-            color: #666;
-            line-height: 1.6;
+            color: var(--text-secondary);
+            line-height: 1.8;
         }
 
         .modal {
@@ -254,7 +276,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
             z-index: 1000;
         }
 
@@ -265,63 +287,124 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--surface-color);
             padding: 30px;
-            border-radius: 8px;
-            max-width: 500px;
+            border-radius: 12px;
+            max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
         }
 
         .modal-header {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            color: var(--text-color);
         }
 
         .modal-footer {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
-            margin-top: 20px;
+            margin-top: 25px;
         }
 
-        .ingredient-item {
+        .ingredient-item, .category-item {
             display: flex;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            align-items: center;
         }
 
-        .ingredient-item input {
+        .ingredient-item input, .category-item input {
             flex: 1;
         }
 
-        .remove-ingredient {
+        .remove-ingredient, .remove-category {
             background: #f44336;
             color: white;
             border: none;
-            padding: 8px 12px;
+            padding: 10px 14px;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
         }
 
-        .add-ingredient {
+        .add-ingredient, .add-category {
             margin-top: 10px;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px;
-            color: #999;
+            padding: 50px;
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .settings-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .settings-section {
+            background: var(--surface-color);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .color-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-input input[type="color"] {
+            width: 60px;
+            height: 40px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .theme-presets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .theme-preset {
+            padding: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .theme-preset:hover {
+            transform: translateY(-2px);
+        }
+
+        .theme-preset.active {
+            border-color: var(--primary-color);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('shopping')">Shopping List</button>
-            <button class="tab" onclick="switchTab('recipes')">Recipes</button>
+            <button class="tab active" onclick="switchTab('shopping')">🛒 Shopping List</button>
+            <button class="tab" onclick="switchTab('recipes')">🍳 Recipes</button>
+            <button class="tab" onclick="switchTab('settings')">⚙️ Settings</button>
         </div>
 
         <div class="content">
@@ -335,7 +418,7 @@
                     </div>
                     <div class="form-group">
                         <label>Category</label>
-                        <input type="text" id="item-category" placeholder="e.g., Dairy" value="Uncategorized">
+                        <select id="item-category"></select>
                     </div>
                     <div class="form-group">
                         <label>Quantity</label>
@@ -347,7 +430,10 @@
                 <div id="items-container"></div>
 
                 <div class="cart-section">
-                    <div class="category-title">In Cart</div>
+                    <div class="category-title">
+                        <span class="category-emoji">🛒</span>
+                        <span>In Cart</span>
+                    </div>
                     <div id="cart-container"></div>
                     <button class="btn btn-danger checkout-btn" onclick="checkout()">Checkout</button>
                 </div>
@@ -357,6 +443,53 @@
             <div id="recipes-tab" class="tab-content">
                 <button class="btn btn-success" onclick="openRecipeModal()" style="margin-bottom: 20px;">Create Recipe</button>
                 <div id="recipes-container" class="recipe-list"></div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="settings-grid">
+                    <div class="settings-section">
+                        <h3>Theme Presets</h3>
+                        <div class="theme-presets">
+                            <div class="theme-preset" style="background: #1e1e1e; color: #e0e0e0;" onclick="applyPreset('dark')">Dark</div>
+                            <div class="theme-preset" style="background: #f5f5f5; color: #333;" onclick="applyPreset('light')">Light</div>
+                            <div class="theme-preset" style="background: #0d1117; color: #c9d1d9;" onclick="applyPreset('github')">GitHub</div>
+                            <div class="theme-preset" style="background: #1a1a2e; color: #eee;" onclick="applyPreset('midnight')">Midnight</div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Custom Colors</h3>
+                        <div class="form-group">
+                            <label>Primary Color</label>
+                            <div class="color-input">
+                                <input type="color" id="primary-color" onchange="updateTheme()">
+                                <input type="text" id="primary-color-text" readonly style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Background Color</label>
+                            <div class="color-input">
+                                <input type="color" id="bg-color" onchange="updateTheme()">
+                                <input type="text" id="bg-color-text" readonly style="flex: 1;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Surface Color</label>
+                            <div class="color-input">
+                                <input type="color" id="surface-color" onchange="updateTheme()">
+                                <input type="text" id="surface-color-text" readonly style="flex: 1;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Manage Categories</h3>
+                        <div id="categories-list"></div>
+                        <button class="btn add-category" onclick="addCategoryField()">Add Category</button>
+                        <button class="btn btn-success" onclick="saveCategories()" style="margin-top: 15px;">Save Categories</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -375,7 +508,7 @@
                 <button class="btn add-ingredient" onclick="addIngredientField()">Add Ingredient</button>
             </div>
             <div class="modal-footer">
-                <button class="btn" onclick="closeRecipeModal()">Cancel</button>
+                <button class="btn btn-secondary" onclick="closeRecipeModal()">Cancel</button>
                 <button class="btn btn-success" onclick="saveRecipe()">Save Recipe</button>
             </div>
         </div>
@@ -383,6 +516,145 @@
 
     <script>
         let ingredientCount = 0;
+        let categoryCount = 0;
+        let categories = [];
+        let currentTheme = {};
+
+        const THEME_PRESETS = {
+            dark: {
+                mode: 'dark',
+                primary: '#2196F3',
+                background: '#1e1e1e',
+                surface: '#2d2d2d'
+            },
+            light: {
+                mode: 'light',
+                primary: '#1976D2',
+                background: '#f5f5f5',
+                surface: '#ffffff'
+            },
+            github: {
+                mode: 'dark',
+                primary: '#58a6ff',
+                background: '#0d1117',
+                surface: '#161b22'
+            },
+            midnight: {
+                mode: 'dark',
+                primary: '#00adb5',
+                background: '#1a1a2e',
+                surface: '#16213e'
+            }
+        };
+
+        async function loadTheme() {
+            const response = await fetch('/api/theme');
+            currentTheme = await response.json();
+            applyThemeColors(currentTheme);
+        }
+
+        function applyThemeColors(theme) {
+            document.documentElement.style.setProperty('--primary-color', theme.primary);
+            document.documentElement.style.setProperty('--bg-color', theme.background);
+            document.documentElement.style.setProperty('--surface-color', theme.surface);
+            
+            // Auto-calculate text colors based on background
+            const isDark = theme.mode === 'dark';
+            document.documentElement.style.setProperty('--text-color', isDark ? '#e0e0e0' : '#333333');
+            document.documentElement.style.setProperty('--text-secondary', isDark ? '#b0b0b0' : '#666666');
+            document.documentElement.style.setProperty('--border-color', isDark ? '#404040' : '#dddddd');
+            document.documentElement.style.setProperty('--hover-color', isDark ? '#383838' : '#eeeeee');
+
+            // Update color inputs
+            document.getElementById('primary-color').value = theme.primary;
+            document.getElementById('primary-color-text').value = theme.primary;
+            document.getElementById('bg-color').value = theme.background;
+            document.getElementById('bg-color-text').value = theme.background;
+            document.getElementById('surface-color').value = theme.surface;
+            document.getElementById('surface-color-text').value = theme.surface;
+        }
+
+        async function applyPreset(preset) {
+            currentTheme = THEME_PRESETS[preset];
+            applyThemeColors(currentTheme);
+            await fetch('/api/theme', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(currentTheme)
+            });
+        }
+
+        async function updateTheme() {
+            const theme = {
+                mode: 'custom',
+                primary: document.getElementById('primary-color').value,
+                background: document.getElementById('bg-color').value,
+                surface: document.getElementById('surface-color').value
+            };
+            
+            document.getElementById('primary-color-text').value = theme.primary;
+            document.getElementById('bg-color-text').value = theme.background;
+            document.getElementById('surface-color-text').value = theme.surface;
+            
+            applyThemeColors(theme);
+            await fetch('/api/theme', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(theme)
+            });
+        }
+
+        async function loadCategories() {
+            const response = await fetch('/api/categories');
+            categories = await response.json();
+            updateCategoryDropdown();
+            updateCategoriesManager();
+        }
+
+        function updateCategoryDropdown() {
+            const select = document.getElementById('item-category');
+            select.innerHTML = categories.map(cat => 
+                `<option value="${cat.name}">${cat.emoji} ${cat.name}</option>`
+            ).join('');
+        }
+
+        function updateCategoriesManager() {
+            const container = document.getElementById('categories-list');
+            container.innerHTML = categories.map((cat, idx) => `
+                <div class="category-item" data-index="${idx}">
+                    <input type="text" value="${cat.emoji}" placeholder="Emoji" maxlength="2" style="max-width: 60px;">
+                    <input type="text" value="${cat.name}" placeholder="Category Name">
+                    <button class="remove-category" onclick="removeCategory(${idx})">×</button>
+                </div>
+            `).join('');
+        }
+
+        function addCategoryField() {
+            categories.push({name: 'New Category', emoji: '📦'});
+            updateCategoriesManager();
+        }
+
+        function removeCategory(idx) {
+            categories.splice(idx, 1);
+            updateCategoriesManager();
+        }
+
+        async function saveCategories() {
+            const items = document.querySelectorAll('.category-item');
+            categories = Array.from(items).map(item => ({
+                emoji: item.querySelectorAll('input')[0].value,
+                name: item.querySelectorAll('input')[1].value
+            }));
+            
+            await fetch('/api/categories', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({categories})
+            });
+            
+            updateCategoryDropdown();
+            alert('Categories saved!');
+        }
 
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -391,10 +663,14 @@
             if (tab === 'shopping') {
                 document.querySelectorAll('.tab')[0].classList.add('active');
                 document.getElementById('shopping-tab').classList.add('active');
-            } else {
+                loadItems();
+            } else if (tab === 'recipes') {
                 document.querySelectorAll('.tab')[1].classList.add('active');
                 document.getElementById('recipes-tab').classList.add('active');
                 loadRecipes();
+            } else if (tab === 'settings') {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('settings-tab').classList.add('active');
             }
         }
 
@@ -412,10 +688,16 @@
             if (Object.keys(data.active).length === 0) {
                 itemsContainer.innerHTML = '<div class="empty-state">No items yet. Add your first item!</div>';
             } else {
-                for (const [category, items] of Object.entries(data.active)) {
+                for (const [categoryName, items] of Object.entries(data.active)) {
+                    const category = categories.find(c => c.name === categoryName) || {name: categoryName, emoji: '📦'};
                     const section = document.createElement('div');
                     section.className = 'category-section';
-                    section.innerHTML = `<div class="category-title">${category}</div>`;
+                    section.innerHTML = `
+                        <div class="category-title">
+                            <span class="category-emoji">${category.emoji}</span>
+                            <span>${category.name}</span>
+                        </div>
+                    `;
                     
                     items.forEach(item => {
                         section.innerHTML += renderItem(item);
@@ -466,7 +748,6 @@
             });
             
             document.getElementById('item-name').value = '';
-            document.getElementById('item-category').value = 'Uncategorized';
             document.getElementById('item-quantity').value = '1';
             
             loadItems();
@@ -509,7 +790,10 @@
                         </div>
                     </div>
                     <div class="recipe-ingredients">
-                        ${recipe.ingredients.map(i => `• ${i.name} (${i.quantity}) - ${i.category}`).join('<br>')}
+                        ${recipe.ingredients.map(i => {
+                            const cat = categories.find(c => c.name === i.category) || {emoji: '📦'};
+                            return `${cat.emoji} ${i.name} (${i.quantity})`;
+                        }).join('<br>')}
                     </div>
                 </div>
             `).join('');
@@ -533,7 +817,7 @@
                 <div class="ingredient-item" id="ingredient-${id}">
                     <input type="text" placeholder="Name" class="ing-name">
                     <input type="text" placeholder="Qty" class="ing-qty" value="1" style="max-width: 80px;">
-                    <input type="text" placeholder="Category" class="ing-cat" value="Uncategorized">
+                    <select class="ing-cat">${categories.map(c => `<option value="${c.name}">${c.emoji} ${c.name}</option>`).join('')}</select>
                     <button class="remove-ingredient" onclick="removeIngredient(${id})">×</button>
                 </div>
             `;
@@ -585,7 +869,6 @@
             await fetch(`/api/recipes/${id}/add`, {method: 'POST'});
             alert('Recipe ingredients added to shopping list!');
             switchTab('shopping');
-            loadItems();
         }
 
         async function deleteRecipe(id) {
@@ -594,8 +877,12 @@
             loadRecipes();
         }
 
-        // Load items on page load
-        loadItems();
+        // Initialize
+        (async function() {
+            await loadTheme();
+            await loadCategories();
+            loadItems();
+        })();
     </script>
 </body>
 </html>
