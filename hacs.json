@@ -2,6 +2,5 @@
   "name": "HA Shopping List",
   "content_in_root": false,
   "render_readme": true,
-  "domains": ["ha_shopping_list"],
   "homeassistant": "2024.1.0"
 }
