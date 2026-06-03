@@ -70,8 +70,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register API views
     await async_setup_views(hass)
     
+    # Register the Lovelace resource
+    hass.http.register_static_path(
+        f"/hacsfiles/{DOMAIN}/ha-shopping-list-card.js",
+        hass.config.path(f"custom_components/{DOMAIN}/ha-shopping-list-card.js"),
+        True
+    )
+    
     _LOGGER.info("HA Shopping List integration loaded successfully")
-    _LOGGER.info(f"Access your shopping list at: http://YOUR_HA_IP:8123/api/{DOMAIN}/panel")
+    _LOGGER.info(f"Add the card to your dashboard: type: custom:ha-shopping-list-card")
     
     return True
 
