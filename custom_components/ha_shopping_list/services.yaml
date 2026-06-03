@@ -1,0 +1,58 @@
+"""Services for HA Shopping List."""
+name: Add Item
+description: Add an item to the shopping list
+fields:
+  name:
+    description: Name of the item
+    required: true
+    example: "Milk"
+    selector:
+      text:
+  category:
+    description: Category/aisle for the item
+    required: false
+    default: "Uncategorized"
+    example: "Dairy"
+    selector:
+      text:
+  quantity:
+    description: Quantity or size of the item
+    required: false
+    default: "1"
+    example: "2L"
+    selector:
+      text:
+
+---
+name: Toggle Item
+description: Toggle an item's cart status
+fields:
+  id:
+    description: ID of the item to toggle
+    required: true
+    selector:
+      text:
+
+---
+name: Remove Item
+description: Remove an item from the shopping list
+fields:
+  id:
+    description: ID of the item to remove
+    required: true
+    selector:
+      text:
+
+---
+name: Checkout
+description: Remove all items in cart
+
+---
+name: Add Recipe
+description: Add all ingredients from a recipe to the shopping list
+fields:
+  recipe_id:
+    description: ID of the recipe to add
+    required: true
+    selector:
+      text:
