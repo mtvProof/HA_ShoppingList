@@ -3,6 +3,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.components import frontend
 
 from .const import DOMAIN
 from .shopping_list import ShoppingListManager
@@ -71,7 +72,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await async_setup_views(hass)
     
     # Register the panel
-    await hass.components.frontend.async_register_built_in_panel(
+    await frontend.async_register_built_in_panel(
+        hass,
         "iframe",
         "HA Shopping List",
         "mdi:cart",
