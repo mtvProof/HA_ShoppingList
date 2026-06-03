@@ -7,6 +7,13 @@ import uuid
 
 app = Flask(__name__)
 
+@app.after_request
+def add_header(response):
+    """Add headers to allow iframe embedding."""
+    response.headers['X-Frame-Options'] = 'ALLOWALL'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
 DATA_FILE = '/data/shopping_list.json'
 
 def load_data():
