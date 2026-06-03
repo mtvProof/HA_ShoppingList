@@ -71,16 +71,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register API views
     await async_setup_views(hass)
     
-    # Register panel after a short delay to ensure frontend is ready
+    # Register panel as iframe
     async def _register_panel():
         try:
             await panel_custom.async_register_panel(
                 hass=hass,
                 frontend_url_path=DOMAIN,
-                webcomponent_name="ha-panel-iframe",
+                webcomponent_name="iframe",
                 sidebar_title="HA Shopping List",
                 sidebar_icon="mdi:cart",
-                js_url="/api/panel_custom/ha-panel-iframe",
                 config={"url": f"/api/{DOMAIN}/panel"},
                 require_admin=False,
             )
