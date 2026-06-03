@@ -7,7 +7,7 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./data:/data
+      - /data/shoppinglist:/data
     restart: unless-stopped
     environment:
       - TZ=America/New_York
