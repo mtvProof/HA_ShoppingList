@@ -70,20 +70,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Register API views
     await async_setup_views(hass)
     
-    # Ensure frontend component is loaded
-    if "frontend" not in hass.data:
-        await hass.helpers.discovery.async_load_platform(hass, "frontend", "homeassistant", {}, {})
-    
-    # Register the panel in the sidebar
-    hass.components.frontend.async_register_built_in_panel(
-        component_name="iframe",
-        sidebar_title="HA Shopping List",
-        sidebar_icon="mdi:cart",
-        frontend_url_path=DOMAIN,
-        config={"url": f"/api/{DOMAIN}/panel"},
-        require_admin=False,
-    )
-    
     _LOGGER.info("HA Shopping List integration loaded successfully")
     
     return True
